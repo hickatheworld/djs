@@ -37,6 +37,6 @@ server.get('/*', function (req, res) {
 	} else if (base in docs.typedefs) {
 		res.redirect(`https://discord.js.org/#/docs/main/stable/typedef/${base}`);
 	} else {
-		res.sendStatus(404);
+		res.redirect(`https://discord.js.org/#/docs/main/stable/search?query=${base}`);
 	}
 });
