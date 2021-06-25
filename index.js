@@ -77,9 +77,9 @@ server.get('/*', function (req, res) {
 		const prop = current.props.find(p => p.name === scroll) || current.methods.find(m => m.name === scroll);
 		desc = prop.description;
 		if (prop.returns)
-			desc += `\nReturn type: ${prop.returns.flat().flat().join('').replace(/</g, '&#60;').replace(/>/g, '&#62;')}`;
+			desc += `\nReturn type: ${prop.nullable ? '?' : ''}${prop.returns.flat().flat().join('').replace(/</g, '&#60;').replace(/>/g, '&#62;')}`;
 		else if (prop.type)
-			desc += `\nType: ${prop.type.flat().flat().join('').replace(/</g, '&#60;').replace(/>/g, '&#62;')}`;
+			desc += `\nType: ${prop.nullable ? '?' : ''}${prop.type.flat().flat().join('').replace(/</g, '&#60;').replace(/>/g, '&#62;')}`;
 
 	}
 	if (req.headers['user-agent'].includes('Discordbot')) {
