@@ -82,6 +82,9 @@ server.get('/*', function (req, res) {
 			desc += `\nType: ${prop.type.flat().flat().join('').replace(/</g, '&#60;').replace(/>/g, '&#62;')}`;
 
 	}
-	console.log(current.name, scroll);
-	res.render('embed', { url, name: `${base}.${params.join('.')}`, desc });
+	if (req.headers['user-agent'].includes('Discordbot')) {
+		res.render('embed', { name: `${base}.${params.join('.')}`, desc });
+	}
+	else
+		res.redirect(url);
 });
