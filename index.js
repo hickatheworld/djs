@@ -20,7 +20,7 @@ https.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.js
 			});
 		});
 		console.log('Docs fetched.');
-		server.listen(80, function () {
+		server.listen(process.env.PORT, process.env.IP, function () {
 			console.log('Server listening.');
 		});
 	});
