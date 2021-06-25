@@ -1,3 +1,8 @@
+// Hey!
+// I'm glad you're interested in this code.
+// And I'm also sorry to present to you such a poor code.
+// But understand, I'm too lazy to refactor it properly.
+// I'm content it works at least lol
 const express = require('express');
 const https = require('https');
 const server = express();
