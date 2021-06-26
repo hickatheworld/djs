@@ -34,6 +34,10 @@ https.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.js
 server.set('view engine', 'ejs');
 server.set('views', './views');
 
+server.get('/', function (_req, res) {
+	res.redirect('https://discord.js.org/#/');
+});
+
 server.get('/favicon.ico', function (_req, res) {
 	res.sendStatus(404);
 });
