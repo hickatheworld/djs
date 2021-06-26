@@ -10,7 +10,6 @@ const server = express();
 let docs = { classes: {}, typedefs: {} };
 const BASE_DOCS_URL = 'https://discord.js.org/#/docs/main/stable';
 
-
 https.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json', function (res) {
 	let text = '';
 	res.on('data', function (data) {
@@ -37,11 +36,9 @@ server.set('views', './views');
 server.get('/', function (_req, res) {
 	res.redirect('https://discord.js.org/#/');
 });
-
 server.get('/favicon.ico', function (_req, res) {
 	res.sendStatus(404);
 });
-
 server.get('/*', function (req, res) {
 	const params = req.params[0].split('.');
 	const base = params.shift();
