@@ -55,11 +55,11 @@ app
 		let scroll;
 		// Using every instead of forEach allows to 'break' the loop by returning false, just like using break.
 		params.every((param, i) => {
-			if (current.props.some(p => p.name === param)) {
+			if (get(current.props, param)) {
 				if (i === params.length - 1)
 					scroll = param;
 				else {
-					let type = current.props.find(p => p.name === param).type.flat();
+					let type = get(current.props, param).type.flat();
 					if (type.length > 1) {
 						scroll = param;
 						return false;
@@ -67,7 +67,7 @@ app
 					current = docs.typedefs[type[0][0]] || docs.classes[type[0][0]];
 				}
 
-			} else if (current.methods.some(p => p.name === param)) {
+			} else if (get(current.methods, param)) {
 				scroll = param;
 				return false;
 			}
@@ -81,7 +81,7 @@ app
 		let desc = current.description;
 		if (scroll) {
 			url += `?scrollTo=${scroll}`;
-			const prop = current.props.find(p => p.name === scroll) || current.methods.find(m => m.name === scroll);
+			const prop = get(current.props, scroll) || get(current.methods, scroll);
 			desc = prop.description;
 			if (prop.returns)
 				desc += `\nReturn type: ${prop.nullable ? '?' : ''}${prop.returns.flat().flat().join('').replace(/</g, '&#60;').replace(/>/g, '&#62;')}`;
@@ -103,4 +103,14 @@ app
  */
 function isInDocs(name) {
 	return name in docs.typedef || name in docs.class;
+}
+
+/**
+ * Gets a property from an array of objects as they are for classes' properties/methods in the docs JSON.
+ * @param {Array<Record<string, any>>} arr The array to search in
+ * @param {string} name The name of the value to get
+ * @returns {?any}
+ */
+function get(arr, name) {
+	return arr.find(p => p.name === name);
 }
