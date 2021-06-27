@@ -48,24 +48,24 @@ app
 		if (params.length === 0)
 			return res.redirect(`${BASE_DOCS_URL}/${which(base)}/${base}`);
 
-		let current = docs.typedef[base] || docs.class[base];
-		let scroll;
+		let page = docs.typedef[base] || docs.class[base];
+		let property;
 		// Using every instead of forEach allows to 'break' the loop by returning false, just like using break.
 		params.every((param, i) => {
-			if (get(current.props, param)) {
+			if (get(page.props, param)) {
 				if (i === params.length - 1)
-					scroll = param;
+					property = param;
 				else {
-					let type = get(current.props, param).type.flat();
+					let type = get(page.props, param).type.flat();
 					if (type.length > 1) {
-						scroll = param;
+						property = param;
 						return false;
 					}
-					current = docs.typedef[type[0][0]] || docs.class[type[0][0]];
+					page = docs.typedef[type[0][0]] || docs.class[type[0][0]];
 				}
 
-			} else if (get(current.methods, param)) {
-				scroll = param;
+			} else if (get(page.methods, param)) {
+				property = param;
 				return false;
 			}
 			else
@@ -73,11 +73,11 @@ app
 
 			return true;
 		});
-		let url = `${BASE_DOCS_URL}/${which(current.name)}/${current.name}`;
-		let desc = current.description;
-		if (scroll) {
-			url += `?scrollTo=${scroll}`;
-			const prop = get(current.props, scroll) || get(current.methods, scroll);
+		let url = `${BASE_DOCS_URL}/${which(page.name)}/${page.name}`;
+		let desc = page.description;
+		if (property) {
+			url += `?scrollTo=${property}`;
+			const prop = get(page.props, property) || get(page.methods, property);
 			desc = prop.description;
 			if (prop.returns)
 				desc += `\nReturn type: ${prop.nullable ? '?' : ''}${prop.returns.flat().flat().join('').replace(/</g, '&#60;').replace(/>/g, '&#62;')}`;
