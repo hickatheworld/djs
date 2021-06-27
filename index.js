@@ -7,7 +7,7 @@ const express = require('express');
 const https = require('https');
 const app = express();
 
-let docs = { classes: {}, typedefs: {} };
+let docs = { class: {}, typedef: {} };
 const BASE_DOCS_URL = 'https://discord.js.org/#/docs/main/stable';
 
 https.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json', function (res) {
@@ -17,14 +17,14 @@ https.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.js
 	});
 	res.on('end', function () {
 		const fetched = JSON.parse(raw);
-		['classes', 'typedefs'].forEach(field => {
-			docs[field] = fetched[field].reduce((obj, item) => {
+		[['class', 'classes'], ['typedef', 'typedefs']].forEach(([docsField, fetchedField]) => {
+			docs[docsField] = fetched[fetchedField].reduce((obj, item) => {
 				obj[item.name] = item;
 				return obj;
 			});
 		});
 		console.log('Docs fetched.');
-		app.listen(process.env.PORT, process.env.IP, function () {
+		app.listen(process.env.PORT || 80, process.env.IP, function () {
 			console.log('Server listening.');
 		});
 	});
@@ -46,12 +46,12 @@ app
 		if (!isInDocs(base))
 			return res.redirect(`${BASE_DOCS_URL}/search?query=${base}.${params.join('.')}`);
 		if (params.length === 0) {
-			if (base in docs.classes)
+			if (base in docs.class)
 				return res.redirect(`${BASE_DOCS_URL}/classes/${base}`);
 			else
 				return res.redirect(`${BASE_DOCS_URL}/typedef/${base}`);
 		}
-		let current = docs.typedefs[base] || docs.classes[base];
+		let current = docs.typedef[base] || docs.class[base];
 		let scroll;
 		// Using every instead of forEach allows to 'break' the loop by returning false, just like using break.
 		params.every((param, i) => {
@@ -64,7 +64,7 @@ app
 						scroll = param;
 						return false;
 					}
-					current = docs.typedefs[type[0][0]] || docs.classes[type[0][0]];
+					current = docs.typedef[type[0][0]] || docs.class[type[0][0]];
 				}
 
 			} else if (get(current.methods, param)) {
@@ -76,7 +76,7 @@ app
 
 			return true;
 		});
-		const scope = (current.name in docs.classes) ? 'class' : 'typedef';
+		const scope = (current.name in docs.class) ? 'class' : 'typedef';
 		let url = `${BASE_DOCS_URL}/${scope}/${current.name}`;
 		let desc = current.description;
 		if (scroll) {
