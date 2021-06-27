@@ -11,12 +11,12 @@ let docs = { classes: {}, typedefs: {} };
 const BASE_DOCS_URL = 'https://discord.js.org/#/docs/main/stable';
 
 https.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json', function (res) {
-	let text = '';
+	let raw = '';
 	res.on('data', function (data) {
-		text += data;
+		raw += data;
 	});
 	res.on('end', function () {
-		const fetched = JSON.parse(text);
+		const fetched = JSON.parse(raw);
 		['classes', 'typedefs'].forEach(field => {
 			docs[field] = fetched[field].reduce((obj, item) => {
 				obj[item.name] = item;
