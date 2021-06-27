@@ -45,12 +45,9 @@ app
 		const base = params.shift();
 		if (!isInDocs(base))
 			return res.redirect(`${BASE_DOCS_URL}/search?query=${base}.${params.join('.')}`);
-		if (params.length === 0) {
-			if (base in docs.class)
-				return res.redirect(`${BASE_DOCS_URL}/classes/${base}`);
-			else
-				return res.redirect(`${BASE_DOCS_URL}/typedef/${base}`);
-		}
+		if (params.length === 0)
+			return res.redirect(`${BASE_DOCS_URL}/${which(base)}/${base}`);
+
 		let current = docs.typedef[base] || docs.class[base];
 		let scroll;
 		// Using every instead of forEach allows to 'break' the loop by returning false, just like using break.
@@ -76,8 +73,7 @@ app
 
 			return true;
 		});
-		const scope = (current.name in docs.class) ? 'class' : 'typedef';
-		let url = `${BASE_DOCS_URL}/${scope}/${current.name}`;
+		let url = `${BASE_DOCS_URL}/${which(current.name)}/${current.name}`;
 		let desc = current.description;
 		if (scroll) {
 			url += `?scrollTo=${scroll}`;
@@ -113,4 +109,18 @@ function isInDocs(name) {
  */
 function get(arr, name) {
 	return arr.find(p => p.name === name);
+}
+
+/**
+ * Determines if a given property is part of the `class` or `typedef` side of the docs
+ * @param {string} property The property to search the nature
+ * @returns {string|null}
+ */
+function which(property) {
+	if (property in docs.class)
+		return 'class';
+	else if (property in docs.typedef)
+		return 'typedef';
+	else
+		return null;
 }
