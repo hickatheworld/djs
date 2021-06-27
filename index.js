@@ -43,7 +43,7 @@ app
 	.get('/*', function (req, res) {
 		const params = req.params[0].split('.');
 		const base = params.shift();
-		if (!(base in docs.classes || base in docs.typedefs))
+		if (!isInDocs(base))
 			return res.redirect(`${BASE_DOCS_URL}/search?query=${base}.${params.join('.')}`);
 		if (params.length === 0) {
 			if (base in docs.classes)
@@ -95,3 +95,12 @@ app
 		else
 			res.redirect(url);
 	});
+
+/**
+ * Checks if a given name is in the docs 
+ * @param {string} name 
+ * @returns {boolean}
+ */
+function isInDocs(name) {
+	return name in docs.typedef || name in docs.class;
+}
