@@ -5,7 +5,7 @@
 // I'm content it works at least lol
 const express = require('express');
 const https = require('https');
-const server = express();
+const app = express();
 
 let docs = { classes: {}, typedefs: {} };
 const BASE_DOCS_URL = 'https://discord.js.org/#/docs/main/stable';
@@ -24,16 +24,16 @@ https.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.js
 			});
 		});
 		console.log('Docs fetched.');
-		server.listen(process.env.PORT, process.env.IP, function () {
+		app.listen(process.env.PORT, process.env.IP, function () {
 			console.log('Server listening.');
 		});
 	});
 });
 
-server.set('view engine', 'ejs');
-server.set('views', './views');
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
-server
+app
 	.get('/', function (_req, res) {
 		res.redirect('https://discord.js.org/#/');
 	})
