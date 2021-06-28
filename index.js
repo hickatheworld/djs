@@ -51,6 +51,7 @@ app
 		const base = params.shift();
 		if (!isInDocs(base))
 			return res.redirect(`${BASE_DOCS_URL}/search?query=${base}.${params.join('.')}`);
+		/* TO-DO: Remove this redirect to propose an embed even with only a base class/typedef provided. */
 		if (params.length === 0)
 			return res.redirect(`${BASE_DOCS_URL}/${which(base)}/${base}`);
 
